@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta de CEP</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        .card {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            max-width: 300px;
+            text-align: center;
+        }
+        .card h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .card input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .card button {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .card button:hover {
+            background-color: #0056b3;
+        }
+        .resultado {
+            margin-top: 20px;
+            font-size: 14px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h1>Consulta de CEP</h1>
+    <input type="text" id="cep" placeholder="Digite o CEP" maxlength="8">
+    <button onclick="consultarCep()">Consultar</button>
+    <div class="resultado" id="resultado"></div>
+</div>
+
+<script>
+    const consultarCep = () => {
+        const cep = document.getElementById('cep').value.trim();
+
+        
+        if (!/^[0-9]{8}$/.test(cep)) {
+            document.getElementById('resultado').innerHTML = '<p style="color: red;">CEP inválido. Digite 8 dígitos numéricos.</p>';
+            return;
+        }
+
+        
+        fetch(`https://viacep.com.br/ws/${cep}/json/`)
+            .then(response => {
+                if (!response.ok) throw new Error('Erro ao consultar o CEP');
+                return response.json();
+            })
+            .then(data => {
+                if (data.erro) {
+                    document.getElementById('resultado').innerHTML = '<p style="color: red;">CEP não encontrado.</p>';
+                } else {
+                    document.getElementById('resultado').innerHTML = `
+                        <p><strong>Logradouro:</strong> ${data.logradouro}</p>
+                        <p><strong>Bairro:</strong> ${data.bairro}</p>
+                        <p><strong>Cidade:</strong> ${data.localidade}</p>
+                        <p><strong>Estado:</strong> ${data.uf}</p>
+                    `;
+                }
+            })
+            .catch(error => {
+                document.getElementById('resultado').innerHTML = '<p style="color: red;">Erro na consulta. Tente novamente.</p>';
+                console.error(error);
+            });
+    };
+</script>
+
+</body>
+</html>

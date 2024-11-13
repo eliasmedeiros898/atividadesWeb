@@ -1,0 +1,25 @@
+header{
+   display: flex;
+   align-items: center;
+   justify-content: space-between; 
+   background: black;
+}
+
+section{
+    display: inline-block;
+    width: 20vw;
+    text-align: center;
+    background: gray;
+    color: white;
+    border-radius: 6px;
+    
+}
+a{
+    text-decoration: none;
+    color: inherit;
+}
+.logo{
+    border-radius: 999px;
+    width: 5vw;
+    margin: 1rem;
+}
